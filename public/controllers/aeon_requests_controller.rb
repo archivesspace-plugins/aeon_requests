@@ -146,7 +146,7 @@ class AeonRequestsController < ApplicationController
         raise RecordNotFound.new if not node["publish"] == true
 
         if node["node_type"] === "resource"
-          breadcrumb_title = (node["finding_aid_status"] === 'completed' and not node["finding_aid_title"].nil?) ? node["finding_aid_title"] : node["title"]
+          breadcrumb_title = (node["finding_aid_status"] === 'completed' and not node["title"].nil?) ? node["title"] : node["title"]
           breadcrumbs.push(breadcrumb_title)
         else
           breadcrumbs.push(node["title"])
@@ -157,7 +157,7 @@ class AeonRequestsController < ApplicationController
     when "resource"
       # see public/app/controller/records_controller#resource
       resource = ResourceView.new(record)
-      breadcrumb_title = (resource.finding_aid_status === 'completed' and not resource.finding_aid_title.nil?) ? resource.finding_aid_title : resource.title
+      breadcrumb_title = (resource.finding_aid_status === 'completed' and not resource.title.nil?) ? resource.title : resource.title
       [breadcrumb_title]
     end
   end
@@ -175,14 +175,14 @@ class AeonRequestsController < ApplicationController
     title = ancestry_titles_for(record).first
 
     site        = determine_site_from_repo_code(@repository["repo_code"])
-    location    = locations_data_for(record).map{ |l| "#{l[:area]}, #{l[:sub_area]}" }.join("; ")
+    location    = locations_data_for(record).map{ |l| "#{l[:area]}" }.join("; ")
     item_volume = locations_data_for(record).map{ |l| "#{l[:sub_area]}" }.join("; ")
     callnum     = callnum_for(record)
 
     {
       title:       title,
       site:        site,
-      location:    location,
+      sub_location:    location,
       item_volume: item_volume,
       callnum:     callnum
     }
